@@ -11,27 +11,45 @@ void filledRect(void *r_in,
     SDL_RenderFillRect(renderer, &rect);
 }
 
-int main(int argc, char* args[]) {
-  SDL_Init(SDL_INIT_VIDEO);
+int checkQuitEvent() {
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
-  int width = 640;
-  int height = 480;
-  SDL_Window *window = SDL_CreateWindow(
+int main(int argc, char* args[]) {
+    SDL_Init(SDL_INIT_VIDEO);
+
+    int width = 640;
+    int height = 480;
+    SDL_Window *window = SDL_CreateWindow(
           "mainWindow",
           SDL_WINDOWPOS_CENTERED,
           SDL_WINDOWPOS_CENTERED,
           width, height,
           SDL_WINDOW_SHOWN
-  );
+    );
 
-  SDL_Renderer *renderer = SDL_CreateRenderer(
+    SDL_Renderer *renderer = SDL_CreateRenderer(
           window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-  );
+    );
 
-  for (;;) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    filledRect(renderer, 300, 200, 50, 50, 255, 0, 0, 128);
-    SDL_RenderPresent(renderer); // Update screen.
-  }
+    for (;;) {
+      if (checkQuitEvent()) goto quit;
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+        filledRect(renderer, 300, 200, 50, 50, 255, 0, 0, 128);
+        filledRect(renderer, 300, 400, 50, 50, 0, 0, 255, 128);
+        SDL_RenderPresent(renderer); // Update screen.
+    }
+
+    quit:
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
+
+    return 0;
 }
