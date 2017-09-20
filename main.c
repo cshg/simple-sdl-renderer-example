@@ -37,6 +37,7 @@ int main(int argc, char* args[]) {
     SDL_Renderer *renderer = SDL_CreateRenderer(
           window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
     );
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     for (;;) {
       if (checkQuitEvent()) goto quit;
